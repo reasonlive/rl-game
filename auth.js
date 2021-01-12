@@ -1,5 +1,10 @@
 function register(fields){
-	let {name,email,password} = fields;
-	if(!email) return new Error('EmailError');
+
+	let {name,mail,password} = fields;
+	if(!mail) return new Error('EmailError');
 	if(!password)return new Error('PasswordError');
+	console.log(`${name} you have such email: ${mail}`)
+
+	let {name,mail,password} = fields;
+	
 }
