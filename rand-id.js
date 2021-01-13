@@ -8,8 +8,3 @@ function getRandId(num){
 	return resultStr;
 }
 
-function getLastChar(string){
-	return string.chatAt(string.length-1);
-}
-
-console.log(getLastChar(getRandId(24)));
