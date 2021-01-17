@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button tested 1`] = `
+<button
+  style={
+    Object {
+      "backgroundColor": "#CD5C5C",
+      "border": 0,
+      "color": "black",
+      "font": "1rem Helvetica, Sans-serif",
+      "height": 50,
+      "outline": 0,
+      "width": 100,
+    }
+  }
+/>
+`;

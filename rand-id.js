@@ -8,3 +8,5 @@ function getRandId(num){
 	return resultStr;
 }
 
+
+

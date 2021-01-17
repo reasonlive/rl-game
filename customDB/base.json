@@ -1,0 +1,34 @@
+{
+  "games": [
+    {
+      "startDate": "2021-01-16T10:35:40.444Z",
+      "endDate": "2021-01-16T10:35:40.444Z",
+      "players": [
+        "176ffd46787555c1114347b4"
+      ],
+      "winner": "user",
+      "history": [
+        {
+          "1": {
+            "username": "name",
+            "usercard": "card"
+          }
+        }
+      ],
+      "id": "0a2c058a872e5f75468023a6"
+    }
+  ],
+  "users": [
+    {
+      "lastIpLog": {
+        "date": "2021-01-16T10:44:25.951Z",
+        "ip": "1232134214"
+      },
+      "registered": "2021-01-16T10:44:25.951Z",
+      "password": "U2FsdGVkX1+BzpvlcYs+fB0rgrvrkqP7dWa/aMiDipQ=",
+      "email": "string@mail.ru",
+      "name": "string",
+      "id": "12a033e137f45b2b82cfbe22"
+    }
+  ]
+}
