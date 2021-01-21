@@ -39,26 +39,44 @@ margin:5px 0 0 5px;
 
 
 
-const GameProcessTable = ({processData,css}) =>{
+const GameProcessTable = ({data,css,steps,title}) =>{
 
-	let gameProc = [{Set:'1',N:'1',name:'name',step:'10spades'}];
+	//let gameProc = [{Set:'1',N:'1',name:'name',step:'10spades'}];
+
+	let spades = (<span>&spades;</span>),
+	clubs = (<span>&clubs;</span>),
+	hearts = (<span>&hearts;</span>),
+	diams = (<span>&diams;</span>);
+
+	function setCardSymbol(step){
+
+		let suit = step.split('/')[1];
+		
+		switch(suit){
+			case 'spades': return spades;
+			case 'clubs': return clubs;
+			case 'hearts': return hearts;
+			case 'diams':return diams; //this name need to change
+			default: return '';
+		}
+	}
 
 
 
-	let lines = gameProc.map(elem=> (
-		<StoryLine>
-		<div>Set: {elem.Set}</div>
-		<div>N: {elem.N}</div>
+	let lines = Array.isArray(steps) ? steps.map((elem,ind)=> (
+		<StoryLine key={ind}>
+		<div>Set: {elem.gameSet}</div>
+		<div>N: {elem.currentStep}</div>
 		<div>name: {elem.name}</div>
-		<div>Step: {elem.step}&spades;</div>
+		<div>Step: {elem.step} {elem.step && setCardSymbol(elem.step)}</div>
 		</StoryLine>
-	))
+	)) : [];
 
 	return(
 		<div style={css}>
 			<StyledTable>
-				<div>game has started at:</div>
-				<div>players:</div>
+				<div>game has started at:{title ? title.startDate : ''}</div>
+				<div>players:{title ? title.players : ''}</div>
 				<StoryBlock>
 					{lines}
 				</StoryBlock>

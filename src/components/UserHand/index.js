@@ -33,17 +33,21 @@ display:flex;
 justify-content:center;
 `
 
-const UserHand = ({cards,css}) =>{
+const UserHand = ({cards,css,action}) =>{
+
+	let items = cards && cards.length > 0 ? cards.map((item,ind) => (
+		<Card key={ind} rank={item.rank} suit={item.suit} trump={item.trump}/>
+		)
+		
+	) : [];
+
+
+
 	return(
 		<div style={css}>
 		<StyledUserHand>
-			<CardBlock>
-				<Card />
-				<Card />
-				<Card />
-				<Card />
-				<Card />
-				<Card />
+			<CardBlock onClick={action}>
+				{items}
 			</CardBlock>
 			<StyledHand/>
 		</StyledUserHand>

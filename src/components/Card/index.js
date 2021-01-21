@@ -22,12 +22,12 @@ overflow:hidden;
 //hearts
 //diamonds
 
-const Card = ({rank,suit,css}) => {
+const Card = ({rank,suit,trump,css}) => {
 
 	let posx = 0, posy = 0;
 
 	switch(rank){
-		case 'A': break;
+		case 'A': posx = 0;break;
 		case '2': posx = posx - SIZE_X;break;
 		case '3': posx = posx - SIZE_X*2;break;
 		case '4': posx = posx - SIZE_X*3;break;
@@ -44,10 +44,10 @@ const Card = ({rank,suit,css}) => {
 	}
 
 	switch(suit){
-		case 'clubs': break;
+		case 'clubs': posy = 0;break;
 		case 'spades': posy = posy - SIZE_Y;break;
 		case 'hearts': posy = posy - SIZE_Y*2;break;
-		case 'diamonds': posy = posy - SIZE_Y*3;break;
+		case 'diams': posy = posy - SIZE_Y*3;break;
 		default: posy = 0;
 	}
 
@@ -71,9 +71,15 @@ const Card = ({rank,suit,css}) => {
 		
 			
 		
-		<StyledCard style={css}>
+		<StyledCard  style={css}>
 			
-			<div style={cardStyle}></div>
+			<div 
+			style={cardStyle}
+			data-suit={suit}
+			data-rank={rank}
+			data-username={localStorage.getItem('name')}
+			data-trump={trump}
+			></div>
 			
 		</StyledCard>
 			

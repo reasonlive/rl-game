@@ -2,8 +2,10 @@ import React from 'react';
 import DefaultStyles from './utils/styles/default';
 import Header from './components/Header';
 import Footer from './components/Footer';
+
+//for auto update logged state
 import {Provider} from 'react-redux';
-import store from './store';
+import {store} from './store';
 
 function App({children,data}) {
   return (
@@ -18,7 +20,7 @@ function App({children,data}) {
         font: 'game',
         size: 'large_l'
        }}
-       sessionState={data && data.logged}
+       
        />
       {children}
     </div>

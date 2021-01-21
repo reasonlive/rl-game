@@ -53,7 +53,7 @@ async function add(dbname,collection, object){
 	let result = false;
 	let file = await fs.promises.readFile(__dirname+'/'+dbname+'.json', 'utf8');
 	let obj = JSON.parse(file);
-	console.log(object)
+	
 	//checks if collection exists and if such email value exists
 	if(Array.isArray(obj[collection])){
 		for(let item of obj[collection]){
@@ -82,20 +82,33 @@ async function add(dbname,collection, object){
 	return result;
 }
 
-async function get(dbname,collection,id){
+//@param property may be id or email
+async function get(dbname,collection,property){
 	let result = null;
 	let file = await fs.promises.readFile(__dirname+'/'+dbname+'.json', 'utf8');
 	let obj = JSON.parse(file);
 	if(Array.isArray(obj[collection])){
 		for(let field of obj[collection]){
-			if(field.id === id){
+			if(field && field.id === property || field.email === property){
 				result = field;
 				break;
 			}
 		}
 	}
 
-	await fs.promises.writeFile(__dirname+'/'+dbname+'.json', JSON.stringify(obj, 0,2), 'utf8');
+	file = obj = null;
+	return result;
+}
+
+async function getAll(dbname,collection){
+	let result = null;
+	let file = await fs.promises.readFile(__dirname+'/'+dbname+'.json', 'utf8');
+	let obj = JSON.parse(file);
+	if(Array.isArray(obj[collection])){
+		result = obj[collection];
+	}
+
+	file = obj = null;
 	return result;
 }
 
@@ -161,13 +174,14 @@ module.exports =  function createConnection(dbname,collection){
 
 	return async function connect(action,id,values){
 		switch(action){
-			case 'create': return await create(db);break;
-			case 'drop': return await drop(db);break;
-			case 'createCollection': return await createCollection(db,coll);break;
-			case 'add': return await add(db,coll,values);break;
-			case 'remove': return await remove(db,coll,id);break;
-			case 'update': return await update(db,coll,id,values);break;
+			case 'create': return await create(db);
+			case 'drop': return await drop(db);
+			case 'createCollection': return await createCollection(db,coll);
+			case 'add': return await add(db,coll,values);
+			case 'remove': return await remove(db,coll,id);
+			case 'update': return await update(db,coll,id,values);
 			case 'get': return await get(db,coll,id);
+			case 'getAll': return await getAll(db,coll); 
 			default: return await null;
 		}
 	}

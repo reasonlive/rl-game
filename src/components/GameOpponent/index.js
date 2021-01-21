@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import * as styles from '../../utils/styles';
 import avatar from './avatar.png'
 import card from './card.png';
 
@@ -39,7 +40,7 @@ justify-content:center;
 
 `
 
-const GameOpponent = ({userData,css}) => {
+const GameOpponent = ({userData,css,exist,action}) => {
 
 
 	//animation will change opacity of opponent cards
@@ -49,15 +50,17 @@ const GameOpponent = ({userData,css}) => {
 	return (
 		<div style={css}>
 			<StyledOpponent>
+		{exist ? (
+			<div>
 				<OpponentInfo>
 					<img src={avatar} alt='name' width='50' height='50' />
-					<div>
-						<div>name</div>
-						<div>wins:</div>
-						<div>losses:</div>
+					<div style={{font:styles.fonts['primary']['small_l']}}>
+						<div>name:{userData.name}</div>
+						<div>wins:{userData.wins}</div>
+						<div>losses:{userData.losses}</div>
 					</div>
 				</OpponentInfo>
-				<CardBox>
+				<CardBox onContextMenu={action}>
 				<Card style={{transform:'rotate(20deg)'}}/>
 				<Card style={{transform:'rotate(15deg)'}}/>
 				<Card style={{transform:'rotate(10deg)'}}/>
@@ -65,7 +68,9 @@ const GameOpponent = ({userData,css}) => {
 				<Card style={{transform:'rotate(-15deg)'}}/>
 				<Card style={{transform:'rotate(-20deg)'}}/>
 				</CardBox>
+			</div> ) : ''}
 			</StyledOpponent>
+
 		</div>
 	)
 }

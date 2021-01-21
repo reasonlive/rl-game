@@ -16,7 +16,7 @@ background-size: auto;
 
 `
 
-const CardHeap = ({position}) => {
+const CardHeap = ({position,action}) => {
 
 	let [heap,renderHeap] = useState([]);
 
@@ -47,7 +47,10 @@ const CardHeap = ({position}) => {
 
 	return (
 		<div style={position}>
-			<StyledCardHeap onClick={createheap}>
+			<StyledCardHeap onClick={()=> {
+				createheap();
+				action()
+			}}>
 			{heap}
 			</StyledCardHeap>
 		</div>

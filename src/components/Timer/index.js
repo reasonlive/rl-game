@@ -32,7 +32,7 @@ const Timer = ({value,css}) => {
 	return (
 		<div style={css}>
 			<StyledTimer >
-				30:00
+				{value}
 			</StyledTimer>
 		</div>
 	)

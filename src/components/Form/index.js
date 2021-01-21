@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import * as styles from '../../utils/styles';
 
 import Button from '../Button';
-import store from '../../store';
-
+//import store from '../../store';
+import clientFetcher from '../../utils/fetcher';
+const fetcher = new clientFetcher();
 
 const FormWrapper = styled.div`
 	display: flex;
@@ -43,6 +44,33 @@ function onSubmit(data){
 			alert('you put wrong data');
 			return false;
 		}
+		//if it registration
+		if(data.name){
+			fetcher.sendForRegistration(data).
+			then(result=> {
+				
+				if(result.data === 'success'){
+					alert('Congradulations! You may know login with your credentials');
+					window.document.location = '/login';
+				}else{
+					alert(result.data);
+				}
+			}).catch(err=> alert(err));
+		}
+		//if it login the returned value will be user data
+		if(!data.name){
+			fetcher.sendForLogin(data).
+			then(result=> {
+				if(result.data && result.data.name){
+					alert(`Hello ${result.data.name}!`);
+					window.document.location = '/offerground';
+				}else{
+					alert('something broke!'+result.data);
+				}
+				
+			}).catch(err=>alert(err));
+		}
+
 		
 		return false;
 }
@@ -74,7 +102,7 @@ const RegisterForm = () => {
 						<Field 
 						component='input'
 						type='text'
-						name='username'
+						name='name'
 						placeholder='username'
 						/>
 						</div>

@@ -1,9 +1,9 @@
 export default function reducer(state = {}, action = {}){
 	switch(action.type){
-		case 'FORM_SENT': return {
-			value: action.value,
+		case 'CHECK_LOGGED': return {
 			logged:action.logged
 		}
+		
 		default: return state;
 	}
 }

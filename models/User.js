@@ -18,10 +18,10 @@ let schema = yup.object().shape({
 	password: yup.string().required().transform(function(value,oldValue){
 		return makeHash(value)
 	}),
-	registered: yup.date(),
-	wins: yup.number().positive().integer(),
-	losses: yup.number().positive().integer(),
-	online: yup.boolean(),
+	registered: yup.date().default(()=> new Date()),
+	wins: yup.number().integer().default(0),
+	losses: yup.number().integer().default(0),
+	online: yup.boolean().default(()=> false),
 	lastIpLog: yup.mixed({
 		date: yup.date(),
 		ip: yup.string()

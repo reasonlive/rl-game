@@ -25,18 +25,28 @@ border:2px solid black;
 `
 
 
-const CardTable = ({css}) =>{
+const CardTable = ({css,activeCard,deckAction,heapAction,activeCardAction,deckRemain}) =>{
+
+
 
 	return(
 		<div style={css}>
 			<StyledTable>
 				<CardDeck 
 				position={{position:'absolute',top:149,left:10}}
+				action={deckAction}
+				
 				/>
 
-				<HitPlace>
+				<HitPlace onClick={activeCardAction}>
+				{activeCard ? <Card 
+					rank={activeCard.rank} 
+					suit={activeCard.suit} /> : ''}
 				</HitPlace>
-				<CardHeap />
+				<CardHeap
+				action={heapAction}
+				 />
+				
 			</StyledTable>
 		</div>
 	)

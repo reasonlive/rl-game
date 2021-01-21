@@ -1,5 +1,21 @@
-import {createStore} from 'redux';
-import reducer from './reducers/formReducer';
-const store = createStore(reducer);
+import { createStore, applyMiddleware } from 'redux'
+import createSagaMiddleware from 'redux-saga';
 
-export default store;
+import reducers from './reducers';
+import {getCheckAuth} from './sagas';
+
+const sagaMiddleWare = createSagaMiddleware();
+
+const store = createStore(
+	reducers,
+	applyMiddleware(sagaMiddleWare)
+);
+
+//sagaMiddleWare.run(getCheckAuth)
+
+
+export {
+	sagaMiddleWare,
+	store
+}
+

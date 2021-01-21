@@ -2,7 +2,7 @@ const schema = require('../models/Game');
 const db = require('../customDB');
 const base = db('base', 'games');
 
-
+//returns game id
 async function addGame(fields){
 	try{
 		let validatedFields = await schema.validate(fields);
@@ -16,6 +16,7 @@ async function addGame(fields){
 	}
 }
 
+//returns game data or error
 async function getGame(id){
 	try{
 		let game = await base('get',id);
@@ -25,6 +26,8 @@ async function getGame(id){
 	}
 }
 
+
+//returns boolean
 async function deleteGame(id){
 	try{
 		let deleted = await base('remove', id);
@@ -44,6 +47,7 @@ async function updateGame(id,values){
 	}
 }
 
+//add user to the game and returns updated game data or error
 async function addUserToGame(userId,gameId){
 	let game = await getGame(gameId);
 	console.log(game)
@@ -57,6 +61,12 @@ async function addUserToGame(userId,gameId){
 		return e;
 	}
 }
+
+//returns all game data
+async function getAll(){
+	return await base('getAll');
+}
+
 
 async function test(){
 
@@ -92,7 +102,10 @@ async function test(){
 
 module.exports = {
 	addGame,
+	getGame,
+	getAll,
 	deleteGame,
 	updateGame,
 	addUserToGame,
 }
+

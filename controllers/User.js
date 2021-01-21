@@ -3,6 +3,7 @@ const crypto = require('crypto-js');
 const db = require('../customDB');
 const base = db('base', 'users');
 
+//returns user id or error
 async function addUser(fields){
 	try{
 		let validatedFields = await schema.validate(fields);
@@ -16,6 +17,7 @@ async function addUser(fields){
 	}
 }
 
+//returns user data
 async function getUser(id){
 	try{
 		let user = await base('get',id);
@@ -24,7 +26,23 @@ async function getUser(id){
 		return e;
 	}
 }
+//returns all user entities
+async function getAll(){
+	let res =  await base('getAll');
+	console.log(res);
+	return res;
+}
 
+//returns user data
+async function getUserByEmail(email){
+	try{
+		let user = await base('get', email);
+		return user;
+	}catch(e){
+		return e;
+	}
+}
+//returns boolean
 async function deleteUser(id){
 	try{
 		let deleted = await base('remove', id);
@@ -44,13 +62,14 @@ async function updateUser(id,values){
 	}
 }
 
+//returns boolean
 async function checkPassword(id,password){
 	let user = await getUser(id);
 	let decrypted = decryptHash(user.password);
 	return decrypted === password;
 }
 
-
+//decrypt password from db
 function decryptHash(hash){
 		let bytes = crypto.AES.decrypt(hash, 'KHHuujdm44kvcifj599');
 		return bytes.toString(crypto.enc.Utf8);
@@ -59,7 +78,12 @@ function decryptHash(hash){
 module.exports = {
 	addUser,
 	getUser,
+	getAll,
+	getUserByEmail,
 	deleteUser,
 	updateUser,
 	checkPassword
 }
+
+
+//getUserByEmail('hello@mail.ru').then(result=>console.log(result))
