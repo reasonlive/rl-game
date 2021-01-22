@@ -93,6 +93,10 @@ export default class GameProcess {
 			}
 			return;
 		}else{
+			if(!this.deck){
+				player.winner = true;
+				return player;
+			}
 			let remained = player['cards'].length;
 			let needAmount = 6 - remained;
 			if(this.deck && this.deck.length > needAmount){

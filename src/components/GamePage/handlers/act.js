@@ -13,7 +13,7 @@ export const  act = (e) => {
 			
 			//number of set in the queue,
 			let {gameSet,currentStep} = info;
-			console.log(currentStep)			
+					
 
 			//cards from store,
 			let {cards,activeCard} = store.getState().cards;
@@ -58,9 +58,7 @@ export const  act = (e) => {
 
 				let lastHeapCard = activeCard;
 
-				console.log('attacker'+attacker.name);
-				console.log('def'+defendant.name);
-				console.log(store.getState().info.history);
+				
 				//checking whose step must be
 				if(lastHeapCard && lastHeapCard.username === username){
 					
@@ -128,7 +126,7 @@ export const  act = (e) => {
 
 		
 		store.dispatch(setPlayerAction({data:dataToChange}));
-		console.log(store.getState().info.history)
+		
 		//restart timer
 		store.dispatch(setTimer('RESTART_TIMER',30));
 		

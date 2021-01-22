@@ -62,10 +62,14 @@ function onSubmit(data){
 			fetcher.sendForLogin(data).
 			then(result=> {
 				if(result.data && result.data.name){
+					//set mode and name of logged user
+					localStorage.setItem('name',result.data.name);
+					localStorage.setItem('singleMode', result.data.mode);
 					alert(`Hello ${result.data.name}!`);
+
 					window.document.location = '/offerground';
 				}else{
-					alert('something broke!'+result.data);
+					alert('something broke!'+result.data.error);
 				}
 				
 			}).catch(err=>alert(err));
@@ -82,6 +86,16 @@ function validate(data){
 		return true;
 	}
 	else return false;
+}
+
+//blured inputs when cursor over the submit button
+function onBlur(){
+	let elems = window.document.getElementsByTagName('input');
+	for(let i=0;i<elems.length;i++){
+		
+			elems[i].blur();
+		
+	}
 }
 
 
@@ -144,6 +158,7 @@ const RegisterForm = () => {
 						 status='attention'
 						 text='submit'
 						 font='1.4rem Verdana, sans-serif'
+						 extra={onBlur}
 						 />
 
 						 <Button 
@@ -220,6 +235,7 @@ const LoginForm = () => {
 						 status='attention'
 						 text='submit'
 						 font='1.4rem Verdana, sans-serif'
+						 extra={onBlur}
 						 />
 
 						 <Button 

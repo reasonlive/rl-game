@@ -13,8 +13,10 @@ background-image: url(${deck});
 background-repeat:no-repeat;
 background-size: auto;
 &:hover{
-	outline:2px solid orange;
+	outline:2px solid black;
 	cursor:pointer;
+	transform: scale(1.05);
+	transition: all 0.3s;
 }
 
 `

@@ -49,7 +49,7 @@ const CardHeap = ({position,action}) => {
 		<div style={position}>
 			<StyledCardHeap onClick={()=> {
 				createheap();
-				action()
+				
 			}}>
 			{heap}
 			</StyledCardHeap>

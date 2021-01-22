@@ -25,13 +25,13 @@ overflow:hidden;
 
 
 
-const Timer = ({value,css}) => {
+const Timer = ({value,css,action}) => {
 
 
 
 	return (
 		<div style={css}>
-			<StyledTimer >
+			<StyledTimer onClick={action}>
 				{value}
 			</StyledTimer>
 		</div>

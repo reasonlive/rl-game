@@ -58,14 +58,12 @@ export const info = (state = {history:[]}, action = {}) => {
 	switch(action.type){
 		case 'GET_OFFERS': return {
 			...state,
-			cards: action.cards || state.cards,
-			activeCard: action.activeCard,
+			offers: action.offers
 							
 		};
 		case 'GET_STATS': return {
 			...state,
-			cards: action.cards || state.cards,
-			activeCard: action.activeCard,
+			games: action.games
 							
 		};
 		case 'GET_OPPONENT': return {
@@ -93,6 +91,12 @@ export const info = (state = {history:[]}, action = {}) => {
 			history: action.history,
 			gameSet: action.gameSet,
 			currentStep: action.currentStep
+		}
+
+		case 'SET_WINNER': return {
+			...state,
+			winner: action.winner,
+			gameId: action.gameId
 		}
 
 

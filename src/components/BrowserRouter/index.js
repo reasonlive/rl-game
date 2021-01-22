@@ -1,7 +1,7 @@
 import React,{Fragment} from 'react';
 import produce from "immer";
 
-import Tests from '../../Tests';
+
 import PageError from '../PageError';
 import App from '../../App';
 import MainPage from '../MainPage';
@@ -15,8 +15,7 @@ import {Provider} from 'react-redux';
 
 import {
   getCheckAuth,
-  renderCreatedGames,
-  renderFinishedGames
+  renderOfferground
   
 } from '../../store/sagas';
 
@@ -28,22 +27,22 @@ import {
   Route,
 } from 'found';
 
+
+sagaMiddleWare.run(getCheckAuth);
+
 const fetchSession = async () => {
-  return {logged: store.getState().logged}
+  return {logged: store.getState().info.logged}
 }
 
 
 
-const fetchGames = async () => {
-  
-  sagaMiddleWare.run(renderCreatedGames);
-  sagaMiddleWare.run(renderFinishedGames);
-  console.log(store.getState())
+/*const fetchOfferground = async () => {
+
   return {
-    offers: store.getState().offers,
-    games: store.getState().games
+    offers: store.getState().info.offers,
+    games: store.getState().info.games
   }
-}
+}*/
 
 const checkGameTable = (id)=>{
 
@@ -64,15 +63,16 @@ const Router = createBrowserRouter({
 
     
     <Route 
-    path='game/open/:id' 
-    Component={GamePage} 
+    path='game' 
+    Component={GamePage}
+    
     />
 
      
 
     <Redirect from='logout' to="/" />
-    <Route path='offerground' getData={fetchGames}  Component={Offerground} />
-    <Route path="tests" Component={Tests} />
+    <Route path='offerground'  Component={Offerground} />
+    
     
     </Route>
 

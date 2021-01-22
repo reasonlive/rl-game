@@ -12,10 +12,14 @@ router.use(function(req,res,next){
 		console.log('request was made by browser')
 		return next(new Error('browser query request!'));
 	}
+
 	next();
 })
 
 router.post('/login', async function(req,res,next){
+	let mode = req.headers.cookie && req.headers.cookie.match(/singleMode=(.*)/)[1];
+
+
 	if(req.body && req.body.email && req.body.password){
 
 		let ipLog = {
@@ -24,9 +28,9 @@ router.post('/login', async function(req,res,next){
 		}
 
 		let user = await fetcher.loginUser({email:req.body.email, password:req.body.password, ipLog});
-		
+		user.mode = mode;
 		if(user instanceof Error){
-			res.json(user.message)
+			res.json({error:user.message})
 		}
 
 		//set up jwt token and attach it to the session
@@ -126,46 +130,41 @@ router.get('/offers', async function(req,res,next){
 
 //game requests
 //first entry to the game 
-router.get('/game/:id', async function(req,res,next){
-
-	if(checkOnId(req.params.id)){
+router.get('/game', async function(req,res,next){
+	/*if(req.headers['sec-fetch-mode'] === 'navigate'){
+		console.log('request was made by user');
+		res.redirect('/offerground');
+		next();
+	}*/
+	if(!req.query.id){
+		res.redirect('/offerground');
+		return next();
+	}
+	
+	if(checkOnId(req.query.id)){
 		let user = await getSessionUserInfo(req);
 		if(!user)return next();
 		console.log('user '+user.name+' came into the game');
-		let game = await fetcher.get('game', req.params.id);
-		console.log(game)
+		let game = await fetcher.get('game', req.query.id);
+		//console.log(game)
 		if(!game)return next();
 
-		//if it was an enter from first player as creator
-		if(!game.players){
-			let players = [user.name];
-			let result = await fetcher.update('game', req.params.id, {players: players});
-			if(result instanceof Error){
-				next(result);
-				req.session = null;
-			}
-			res.redirect('/game/open/'+req.params.id);
-		}
-
-		//if it was the second enter to the game 
-		if(game && game.players){
-			let players = game.players;
-			if(players.length > 1){
-				req.session = null;
-				res.redirect('/');
-			}
+		
+		let players = game.players;
+		if(players.length > 1){
+			//req.session = null;
+			//res.redirect('/');
+			return next();
+		}else{
+			console.log('second added');
 			players.push(user.name);
-			let result = await fetcher.update('game', req.params.id, {players: players});
-			if(result instanceof Error){
-				next(result);
-				req.session = null;
-			}
-			res.redirect('/game/open/'+req.params.id);
+			await fetcher.update('game', req.query.id,{players:players,finished:true});
 		}
+		
 		
 	}
 	
-	res.redirect('/offerground');
+	
 	next();
 	
 })
@@ -179,6 +178,7 @@ router.get('/game/players', async function(req,res,next){
 router.post('/game/create', async function(req,res,next){
 	console.log('creates game')
 	if(req.body){
+		console.log(req.body)
 		try{
 			let result = await fetcher.add('game',req.body);
 			console.log(result)
@@ -188,9 +188,31 @@ router.post('/game/create', async function(req,res,next){
 
 			}
 			else{
-				res.json(result);
+				res.json({id:result});
+				//res.redirect('/game?id='+result);
+				
 				
 			}
+		}catch(e){
+			next(e);
+		}
+	}
+	next();
+})
+
+router.post('/game/update', async function(req,res,next){
+	console.log('updates game');
+	if(req.body && req.body.id){
+		try{
+			let result = await fetcher.update('game', req.body.id,{finished:req.body.finished});
+			if(result instanceof Error){
+				res.send('failure');
+				return next(new Error('500:Server error'));
+			}else{
+				res.send('success');
+				//res.redirect('/offerground');
+			}
+
 		}catch(e){
 			next(e);
 		}

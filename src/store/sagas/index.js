@@ -49,7 +49,7 @@ async function getOffers(){
 
 export function* renderOffers(){
 	let offers = yield call(getOffers);
-	console.log(offers)
+
 	yield put(getGameOffers(offers))
 }
 
@@ -59,14 +59,12 @@ export function* renderOffers(){
 
 //makes fetch through the redux-saga to get finished games
 async function getFinishedGames(){
-
 	let data = await fetcher.fetchStat();
 	return data;
 }
 
 export function* renderFinishedGames(){
 	let games = yield call(getFinishedGames);
-	console.log(games)
 	yield put(getGameStats(games))
 }
 
@@ -78,11 +76,48 @@ export function* renderOfferground(){
 }
 
 
-/////////////// //renderOffers and renderFinishedGames launches in one place at a time
-///////////////////////////////////////////////////////////////////////////////////////
 
 
 
+
+//this func invokes when time is up and user make no step
+function* overtimeHandler(store){
+	let {players,info,cards} = store.getState();
+	let {gameSet,currentStep} = info;
+	let defendant = players.beat;
+	console.log(defendant)
+	let heapCards = info.proc.heap;
+	let whoseCards = defendant.name === info.proc.player1.name ? 1 : 2;
+	if(whoseCards > 1){
+		info.proc.takeHeap(info.proc.player2)
+		
+	}else{
+		info.proc.takeHeap(info.proc.player1)
+		
+	}
+
+	store.dispatch(setPlayerAction({hold:{name:defendant.name}}))
+
+	let preparedData = {
+		
+		cards:{
+			...cards.cards
+			
+		},
+		history: info.history.concat([
+				{gameSet:++gameSet,currentStep:0,name:'',step:''}]),
+		activeCard: '',
+		gameSet:gameSet,
+		currentStep:0
+	}
+
+	yield renderStep(preparedData);
+
+}
+
+
+
+//timer process
 function* timerTick(store,init){
 
 	let val = init;
@@ -93,7 +128,16 @@ function* timerTick(store,init){
 			
 		}
 		if(action.type == 'STOP_TIMER'){
-			init = 0;
+			init = -10;
+		}
+
+		if(action.type == 'SET_WINNER'){
+			
+			let {winner,gameId} = store.getState().info;
+			console.log(gameId)
+			//fetcher.updateGameData('end',gameId);
+			init = -10;
+			alert('WINNER IS '+winner.name);
 		}
 	})
 
@@ -106,12 +150,14 @@ function* timerTick(store,init){
 
 		let v = yield put(setTimer('TIMER',init));
 
-		if(store.getState().timer.timerValue < 10){
-			
+		if(store.getState().timer.timerValue < 0){
+			yield put(setTimer('TIMER',0))
+			break;
 		}
 
 		init = --store.getState().timer.timerValue;
 		if(store.getState().timer.timerValue < 1){
+			yield overtimeHandler(store);
 			let restarted = yield put(setTimer('RESTART_TIMER',val));
 			init = restarted.timerValue;
 		}
@@ -120,7 +166,11 @@ function* timerTick(store,init){
 	
 }
 
+
+//watch for the player's actions
 function* watchPlayers(){
+
+	console.log('watch players')
 
 	while(true){
 
@@ -129,6 +179,7 @@ function* watchPlayers(){
 			yield fork(renderStep,data);
 		}
 		
+
 		//if no data break
 	}
 }

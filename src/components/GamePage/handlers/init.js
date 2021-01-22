@@ -6,11 +6,11 @@ import gameSaga from '../../../store/sagas';
 sagaMiddleWare.run(gameSaga,store);
 
 //initialize game after connection of second player
-export const  initGame = (singleMode) => {
+export const  initGame = () => {
 
-		if(singleMode){
-				localStorage.setItem('name', 'hello');  //remove after testing
-				localStorage.setItem('singleMode', true);
+		if(localStorage.getItem('singleMode')){
+				
+				//localStorage.setItem('singleMode', true);
 				
 		
 				let op = {
@@ -40,20 +40,15 @@ export const  initGame = (singleMode) => {
 				let players = [Process.players[0].name, Process.players[1].name];
 				store.dispatch(setGameTitle({players:players,startDate:now}));
 
-				//@args
-				//first: opponent(second player), second: game cards
-				let allCards = {
-					player1: Process.player1.cards,
-					player2:Process.player2.cards
-				}
+				window.document.getElementsByClassName('msg')[0].style.display = 'none';
 
 				
-				console.log(store.getState())
-
-				
-
 				
 		}else{
+
+			localStorage.removeItem('singleMode');
+
+			
 
 			/*const Process = new GameProcess('hello', op.name);
 				Process.shuffle();

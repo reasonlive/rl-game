@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 
 function changeableVars(state){
 	return {
-		logged: state.logged
+		logged: state.info.logged
 	}
 }
 

@@ -11,9 +11,9 @@ export const  hold = (e)=>{
 		if(!players.beat)return;
 
 		//the check for online game through websocket
-		/*if(beat.name !== localStorage.getItem('name')){
+		if(!localStorage.getItem('singleMode') &&  players.beat.name !== localStorage.getItem('name')){
 			return;
-		}*/
+		}
 
 		let descr = {
 			name: players.beat.name

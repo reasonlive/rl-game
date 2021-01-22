@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React from 'react';
 
 import CardTable from '../CardTable';
 import GameOpponent from '../GameOpponent';
@@ -32,15 +32,27 @@ function changeableVars(state){
 	}
 }
 
-const GamePage = ({ownerCards,oppCards,userData,timerValue,history,activeCard,tableTitle}) => {
+
+
+const GamePage = (
+
+	{
+		ownerCards,  //renders cards of pc owner
+		oppCards, //renders opponent cards
+		userData, //opponent info
+		timerValue, //value of timer counter
+		history, // history of player's steps
+		activeCard, // the card on the table 
+		tableTitle // game title , who plays and when it started
+	}) => {
 
 
 	
 
 	//drop action for testing only
-	const drop = ()=> {
+	/*const drop = ()=> {
 		store.dispatch({type:'CARD_RENDER',activeCard:''});
-	}
+	}*/
 
 	
 
@@ -71,6 +83,22 @@ const GamePage = ({ownerCards,oppCards,userData,timerValue,history,activeCard,ta
 			</div></div>) ) : null;
 
 
+	let cssMsg = {position:'absolute',
+		top:-600,
+		left:400,
+		background:'rgba(0,0,0,0.8)',
+		position:'relative',
+		zIndex:300,
+		color:'white',
+		width:400,
+		borderRadius:10,
+		padding:20,
+
+	}
+
+	
+
+
 	
 
 	return (
@@ -81,7 +109,7 @@ const GamePage = ({ownerCards,oppCards,userData,timerValue,history,activeCard,ta
 			activeCard={activeCard}
 			activeCardAction={hold}
 			deckAction={pick}
-			heapAction={drop}
+			//heapAction={drop}
 
 			/>
 			
@@ -104,11 +132,13 @@ const GamePage = ({ownerCards,oppCards,userData,timerValue,history,activeCard,ta
 
 			<Timer 
 			css={{position:'absolute',left:150,top:60}}
-			value={timerValue}
-			action={()=>initGame(true)}
+			value={timerValue || 'timer'}
+			
+			action={initGame}
 			/>
 
-			{localStorage.getItem('singleMode') ? (<div className='player2' 
+			{localStorage.getItem('singleMode') ? (<div>
+			<div className='player2' 
 			style={
 				{
 					color:'black',
@@ -120,7 +150,10 @@ const GamePage = ({ownerCards,oppCards,userData,timerValue,history,activeCard,ta
 					overflow:'auto'
 				}}>
 				{divs}
-			</div> ) : ''}
+			</div>
+			 <div className='msg' style={cssMsg}>You are now play ON SINGLE MODE, which means you may make steps for both players
+			and that is the way to test the application in UX details. To see the opponent's cards just click on the right button 
+			by the opponent's cards place <br/><br/> To start the game click on the timer on left side</div></div>) : ''}
 		</div>
 	)
 }

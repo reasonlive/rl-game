@@ -86,6 +86,14 @@ export const setTimer = (type,value) => {
 	}
 }
 
+export const setWinner = (value) => {
+	return {
+		type: ActionTypes.SET_WINNER,
+		winner: value.winner,
+		gameId:value.id
+	}
+}
+
 
 
 

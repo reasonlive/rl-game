@@ -1,5 +1,5 @@
 import {store} from '../../../store';
-import {setPlayerAction,setTimer} from '../../../store/actions';
+import {setPlayerAction,setTimer,setWinner} from '../../../store/actions';
 
 
 //player as attacker ends up the attack
@@ -13,7 +13,7 @@ export const  pick = (e)=>{
 		
 
 		let {proc} = info;
-
+		
 		
 		//checks if attacker exists
 		if(!hit)return;
@@ -32,11 +32,20 @@ export const  pick = (e)=>{
 
 		
 		if(hold){
-			//console.log(hold.name)
+			
 			let picker = proc.player1.name !== hold.name ? proc.player1 : proc.player2;
 
 			//give cards to picker
-			proc.distribute(picker);
+			let result = proc.distribute(picker);
+			
+			if(result && result.winner){
+					
+				let url = window.document.location.href;
+				let id = url.slice( url.lastIndexOf('/')+1,url.length);
+
+				store.dispatch(setWinner({winner:proc.player1,id:id}));
+				return;
+			}
 			store.dispatch(setPlayerAction({hold:''}));
 		}else{
 			//give cards to both

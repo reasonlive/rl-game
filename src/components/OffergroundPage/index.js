@@ -3,43 +3,33 @@ import styled from 'styled-components';
 import Button from '../Button';
 import * as styles from '../../utils/styles';
 
-import {store} from '../../store';
-//import {addToOffers} from '../../store/sagas';
+import {store,sagaMiddleWare} from '../../store';
+import {renderOfferground} from '../../store/sagas';
 import {connect} from 'react-redux';
 
 import clientFetcher from '../../utils/fetcher';
 const fetcher = new clientFetcher();
+sagaMiddleWare.run(renderOfferground)
+
 
 
 async function addGameToOffers(){
 
 	let gameId = await fetcher.sendForCreatingGame({
 		startDate: new Date(),
+		players: [localStorage.getItem('name')],
 		finished:false
 	})
 
-	
-
-	/*let gameData = {id: 'ldjljdsf',
-		startDate: '233434',
-		finished:false,
-		players: [
-		name,
-		],
-	}*/
-
-	//store.dispatch({type:'CREATE_OFFER',offer:gameData});
-
-	//sagaMiddleWare.run(addToOffers,name);
-	window.document.location = '/game/'+gameId;
+	window.document.location = '/game?id='+gameId.id;
 }
 
 
 
 function changableVars(state){
 	return {
-		games: state.games,
-		offers: state.offers
+		games: state.info.games,
+		offers: state.info.offers
 	}
 }
 
@@ -115,13 +105,13 @@ const Offerground = ({data,games,offers}) => {
 
 	offers = offers ? offers.map((elem,ind)=> (
 		<ItemList key={ind}>
-		<div>player:{elem.players[0]}</div>
-		<div>created:{elem.startDate}</div>
+		<div>player:{elem.players && elem.players[0]}</div>
+		<div>created:{elem && elem.startDate}</div>
 		<Button 
 		size='medium'
 		status='attention'
 		text='play'
-		action={()=> window.document.location = '/game/'+elem.id}
+		action={()=> window.document.location = '/game?id='+elem.id}
 		/>
 		</ItemList>
 	) ) : [];
@@ -131,8 +121,8 @@ const Offerground = ({data,games,offers}) => {
 		<div>started:{elem.startDate}</div>
 		<div>ended:{elem.endDate}</div>
 		
-		<div>duration:{elem.duration}</div>
-		<div>players: {elem.players[0]} , {elem.players[1]}</div>
+		<div>duration:{elem && elem.duration}</div>
+		<div>players: {elem.players && elem.players[0]} , {elem.players && elem.players[1]}</div>
 		<div>winner:{elem.winner}</div>
 		</ItemList>
 	) ) : [];

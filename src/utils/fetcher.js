@@ -43,6 +43,7 @@ export default class ClientFetcher{
 	//returns game data
 	async sendForCreatingGame(data){
 		let result = await axios.post('/game/create', data);
+		console.log(result.data)
 		return result.data;
 	}
 
@@ -61,7 +62,7 @@ export default class ClientFetcher{
 	//@return 'end' && updated game data || 'cancel' && string 'success'|'failure'
 	async updateGameData(purpose,id){
 		if(purpose === 'end'){
-			let result = await axios.post('/game/update',id, {finished:true});
+			let result = await axios.post('/game/update',{id: id, finished:true});
 			return result;
 		}
 		if(purpose === 'cancel'){
