@@ -1,12 +1,12 @@
 const schema = require('../models/Game');
-const db = require('../customDB');
-const base = db('base', 'games');
+const Base = require('../customDB');
+const base = new Base('base', 'games');
 
 //returns game id
 async function addGame(fields){
 	try{
 		let validatedFields = await schema.validate(fields);
-		let gameid = await base('add', null,validatedFields);
+		let gameid = await base.add(null,validatedFields);
 		return gameid;
 	}catch(e){
 		let err = new Error(e.message);
@@ -19,7 +19,7 @@ async function addGame(fields){
 //returns game data or error
 async function getGame(id){
 	try{
-		let game = await base('get',id);
+		let game = await base.get(id);
 		return game;
 	}catch(e){
 		return e;
@@ -30,7 +30,7 @@ async function getGame(id){
 //returns boolean
 async function deleteGame(id){
 	try{
-		let deleted = await base('remove', id);
+		let deleted = await base.remove(id);
 		return deleted;
 	}catch(e){
 		return e;
@@ -40,7 +40,7 @@ async function deleteGame(id){
 //updated values: {startDate,endDate,players,winner,history}
 async function updateGame(id,values){
 	try{
-		let updated = await base('update', id,values);
+		let updated = await base.update(id,values);
 		return updated;
 	}catch(e){
 		return e;
@@ -64,7 +64,7 @@ async function addUserToGame(userId,gameId){
 
 //returns all game data
 async function getAll(){
-	return await base('getAll');
+	return await base.getAll();
 }
 
 

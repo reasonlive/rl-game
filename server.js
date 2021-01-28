@@ -42,7 +42,7 @@ app.use('/', router, function (req, res,next) {
 
 
 app.use(function(err,req,res,next){
-	console.log('from last error handler');
+	
 	console.error(err);
 })
 

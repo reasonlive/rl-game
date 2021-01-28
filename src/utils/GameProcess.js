@@ -2,7 +2,11 @@
 ///////////////////////////////////
 //imports to the GamePage Component
 
-export default class GameProcess {
+class GameProcess {
+
+	get [Symbol.toStringTag]() {
+	    return 'GameProcess';
+	}
 
 	constructor(player1,player2){
 
@@ -11,6 +15,9 @@ export default class GameProcess {
 		this.players = [this.player1,this.player2];
 		this.deck = this.initDeck();
 		this.heap = [];
+		this.attacker = undefined;
+		this.defendant = undefined;
+		this.garbage = [];
 	}
 
 
@@ -93,23 +100,33 @@ export default class GameProcess {
 			}
 			return;
 		}else{
-			if(!this.deck){
+			if(!this.deck && player.cards.length === 0){
 				player.winner = true;
 				return player;
 			}
+
+			if(!this.deck)return;
+
 			let remained = player['cards'].length;
+			if(remained >= 6){
+				return;
+			}
 			let needAmount = 6 - remained;
-			if(this.deck && this.deck.length > needAmount){
+			let deckRemained = this.deck && this.deck.length;
+
+			if(deckRemained >= needAmount){
 				for(let i=0;i<needAmount;i++){
 					player.cards.push(this.deck.pop());
 				}
-			}else{
-				let deckRemained = this.deck && this.deck.length;
+			}
+
+			if(deckRemained < needAmount){
 				for(let i=0;i<deckRemained;i++){
 					player.cards.push(this.deck.pop());
 				}
 				this.unsetDeck();
 			}
+			
 			
 		}
 	}
@@ -122,13 +139,36 @@ export default class GameProcess {
 			player.cards.push(this.heap.pop());
 
 		}
-		this.heap = [];
+		//this.heap = [];
 	}
 
 	//put card into main heap
-	//when activeCards is 
-	intoHeap(card){	
-		this.heap.push(card);
+	//when there are activeCards  
+	intoHeap(card){
+		for(let player of this.players){
+			for(let i=0;i<player.cards.length;i++){
+				if(player.cards[i].rank === card.rank && player.cards[i].suit === card.suit){
+					let heapedCard = player.cards.splice(i,1);
+					this.heap.push(heapedCard[0]);
+					break;
+				}
+			}
+		}	
+		
+	}
+
+	pickCards(){
+		
+		this.garbage = this.garbage.concat(this.heap);
+		
+		this.heap = [];
+		this.distribute(this.attacker);
+		//console.log(this.attacker.cards.length)
+		this.distribute(this.defendant);
+		let attacker = this.attacker;
+		this.attacker = this.defendant;
+		this.defendant = attacker;
+		//console.log('next set');
 	}
 
 
@@ -192,11 +232,13 @@ export default class GameProcess {
 					if(player.name === cards.player){
 						player.first = true;
 						first = player;
+						this.attacker = player;
 						break;
 					}
 				}
 			}
 		}
+		this.defendant = this.players[0].name === this.attacker.name ? this.players[1] : this.players[0];
 
 		return first;
 	}
@@ -232,6 +274,4 @@ export default class GameProcess {
 
 }
 
-
-
-
+module.exports = GameProcess;

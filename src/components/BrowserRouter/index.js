@@ -1,7 +1,6 @@
 import React,{Fragment} from 'react';
-import produce from "immer";
 
-
+//pages
 import PageError from '../PageError';
 import App from '../../App';
 import MainPage from '../MainPage';
@@ -35,18 +34,6 @@ const fetchSession = async () => {
 }
 
 
-
-/*const fetchOfferground = async () => {
-
-  return {
-    offers: store.getState().info.offers,
-    games: store.getState().info.games
-  }
-}*/
-
-const checkGameTable = (id)=>{
-
-}
 
 
 

@@ -17,10 +17,9 @@ height:530px;
 `
 
 const DescriptionBlock = styled.div`
-top:130px;left:calc((1366px - 1000px) / 2);
-border-radius:10px;
-width:1000px;height:500px;
 position:absolute;
+margin:50px;
+border-radius:20px;
 background-color:rgba(0,0,0,0.8);
 color:white;
 font: ${styles.fonts['official']['medium_l']};
