@@ -4,10 +4,12 @@ import {setPlayerAction,setTimer,setWinner} from '../../../store/actions';
 
 //player as attacker ends up the attack
 	//and picks other cards from deck
-export const  pick = (e)=>{
+export const pick = ()=>{
 
 		let {players,info} = store.getState();
 		let {beat,hit,hold} = players;
+
+		
 
 		let {gameSet,currentStep} = info;
 		
@@ -18,73 +20,68 @@ export const  pick = (e)=>{
 		//checks if attacker exists
 		if(!hit)return;
 
-		
-		//how many cards remaines in the deck
+		let whoHit = hit.name,
+			whoBeat = beat.name;
+
+		//how many cards remains in the deck
 		let cardsRemained = proc.getDeck() && proc.getDeck().length || 0;
 
-		let descr = {
-			name: hit.name,
-			remain: cardsRemained
-		}
 
-
-		store.dispatch(setPlayerAction({pick:descr}));
+		//store.dispatch({type:'PLAYER_ACT',pick:{name:hit.name}});
+		store.dispatch(setPlayerAction({pick:{name:hit.name}}));
 
 		
 		if(hold){
 			
-			let picker = proc.player1.name !== hold.name ? proc.player1 : proc.player2;
+			
+			let picker = undefined;
+			for(let player of proc.players){
+				if(player.name === store.getState().players.pick.name)picker = player;
+			}
 
 			//give cards to picker
 			let result = proc.distribute(picker);
 			
 			if(result && result.winner){
 					
-				let url = window.document.location.href;
-				let id = url.slice( url.lastIndexOf('/')+1,url.length);
-
-				store.dispatch(setWinner({winner:proc.player1,id:id}));
+				//let url = window && window.document.location.href;
+				//let id = url.slice( url.lastIndexOf('/')+1,url.length);
+				//store.dispatch({type:'SET_WINNER',winner:true,player:result});
+				store.dispatch(setWinner({winner:true,player:result}));
 				return;
 			}
+			//store.dispatch({type:'PLAYER_ACT',hold:''});
 			store.dispatch(setPlayerAction({hold:''}));
+			
 		}else{
 			//give cards to both
-			proc.distribute(proc.player1);
-			proc.distribute(proc.player2);
-
+			for(let player of proc.players){
+				proc.distribute(player);
+			}
+			
 			//reverse players
-			let whoHit = beat.name;
-			let whoBeat = hit.name;
+			whoHit = beat.name;
+			whoBeat = hit.name;
 
-			let mutatedHistory = info.history.concat([
+
+			//store.dispatch({type:'PLAYER_ACT',hit:{name:whoHit},beat:{name:whoBeat}})
+			proc.heap = [];
+			
+		}
+
+		let mutatedHistory = info.history.concat([
 				{gameSet:++gameSet,currentStep:0,name:'',step:''}
 
 				]);
-			
-			store.dispatch(setPlayerAction(
-				{hit:{name:whoHit},beat:{name:whoBeat},data:{history: mutatedHistory,gameSet:gameSet,currentStep:0}}
+
+		store.dispatch(setPlayerAction(
+				{hit:{name:whoHit},beat:{name:whoBeat},data:
+				{history: mutatedHistory,gameSet:gameSet,currentStep:0,activeCard:''}}
 				));
-			
-			//remove the active card from the table
-			store.dispatch({type:'CARD_RENDER', activeCard:null});
 
-
-		}
+		//remove the active card from the table
+		//store.dispatch({type:'CARD_RENDER', activeCard:''});
+		store.dispatch(setTimer('RESTART_TIMER',30));
 		
-		/*if(cardsRemained < 2){
-
-			let lastCard = proc.deck[0];
-			let cards = {
-				...store.getState().cards,
-				lastCard
-			}
-			store.dispatch({type: 'CARD_RENDER', cards: cards});
-			//store.dispatch({type: 'CHANGE_DECK', deck:null});
-			proc.unsetDeck()
-		}else{
-			proc.distribute(proc.player1);
-		}*/
-		//store.dispatch({type:'TIMER_TICK',timerValue:30});
-
 		
 	}

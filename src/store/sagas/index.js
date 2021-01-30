@@ -209,18 +209,20 @@ function* renderStep(values){
 	yield put(renderCards({cards}));
 }
 
+
  function* watchConnection(store){
 
 	while(true){
 
 		let {proc} = yield take('GAME_PROCESS');
 
-		let cards = {
-			player1: proc.player1.cards,
-			player2: proc.player2.cards
+
+		let cards = {};
+		for(let i=0;i<proc.players.length;i++){
+			cards['player'+(i+1)] = proc.players[i].cards
 		}
 
-		yield fork(takeOfferAndStart, proc.player2, cards);
+		yield fork(takeOfferAndStart, proc.players[1], cards);
 		break;
 	
 

@@ -6,7 +6,7 @@ const base = new Base('base', 'games');
 async function addGame(fields){
 	try{
 		let validatedFields = await schema.validate(fields);
-		let gameid = await base.add(null,validatedFields);
+		let gameid = await base.add(validatedFields);
 		return gameid;
 	}catch(e){
 		let err = new Error(e.message);

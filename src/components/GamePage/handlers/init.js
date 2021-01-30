@@ -5,7 +5,7 @@ import gameSaga from '../../../store/sagas';
 
 sagaMiddleWare.run(gameSaga,store);
 
-//initialize game after connection of second player
+//initialize game after connecting to the game table
 export const  initGame = () => {
 
 		if(localStorage.getItem('singleMode')){
@@ -26,7 +26,9 @@ export const  initGame = () => {
 				//card distribution to both of users
 				Process.distribute(null,true);
 				//defines who is first attacker
-				console.log(Process.setFirst(Process.getDeck('0').suit));
+				//there is need to be a tip about first player
+				let first = Process.setFirst(Process.getDeck('0').suit);
+				console.log(first);
 
 				//save process into the store
 				store.dispatch(setGameProcess(Process));
@@ -40,7 +42,11 @@ export const  initGame = () => {
 				let players = [Process.players[0].name, Process.players[1].name];
 				store.dispatch(setGameTitle({players:players,startDate:now}));
 
-				window.document.getElementsByClassName('msg')[0].style.display = 'none';
+				let modalWin = window.document.getElementsByClassName('msg')[0];
+
+				modalWin.innerHTML = `${first.name} is attacking first!`;
+
+				setTimeout( () => {modalWin.style.display = 'none';},3000);
 
 				
 				
@@ -49,27 +55,6 @@ export const  initGame = () => {
 			localStorage.removeItem('singleMode');
 
 			
-
-			/*const Process = new GameProcess('hello', op.name);
-				Process.shuffle();
-				Process.distribute(null,true);
-				store.dispatch({type:"SET_PROCESS", Process: Process});
-
-				//set date to the history table title
-				let date = new Date();
-				let now = date.getDate()+'.0'+(date.getMonth()+1)+'.'+date.getFullYear()+'/'+
-				date.getHours()+':'+date.getMinutes();
-				store.dispatch({type:"SET_GAME_TITLE",title: {players:['hello'],startDate:now}});
-
-				let allCards = {
-					player1: Process.player1.cards,
-					player2:Process.player2.cards
-				}
-
-				sagaMiddleWare.run(takeOfferAndStart,op,Process.player1.cards);
-				startTimer();
-*/
-		
 
 
 

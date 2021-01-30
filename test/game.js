@@ -10,14 +10,18 @@ class GameProcess {
 
 	constructor(player1,player2){
 
-		this.player1 = {...player1,cards:[]};
-		this.player2 = {...player2,cards:[]};
-		this.players = [this.player1,this.player2];
+		
+		this.players = [...arguments];
 		this.deck = this.initDeck();
 		this.heap = [];
 		this.attacker = undefined;
 		this.defendant = undefined;
 		this.garbage = [];
+
+		for(let player of this.players)
+			player.cards = [];
+
+		return this;
 	}
 
 

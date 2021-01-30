@@ -257,7 +257,7 @@ const act = (e) => {
 				}
 
 				let lastHeapCard = activeCard;
-				console.log(lastHeapCard)
+				
 				
 				//checking whose step must be
 				if(lastHeapCard && lastHeapCard.username === username){
@@ -266,7 +266,7 @@ const act = (e) => {
 				}
 
 				if(!lastHeapCard && username === beat.name){
-					console.log('you must not move!');
+					//console.log('you must not move!');
 					return;
 				}
 				
@@ -285,19 +285,24 @@ const act = (e) => {
 				}
 				//checks which card the attacker can add
 				if(attacker.name === username && lastHeapCard){
-					let variants = info.history;
-					let options = [];
-					for(let option of variants){
-						let step = option.step.split('/')[0];
-						options.push(step);
+					let add = false;
+
+					for(let card of proc.heap){
+						if(rank === card.rank){
+							add = true;
+							break;
+						}
 					}
-					if(!options.includes(rank))return;
+
+					if(!add)return;
 				}
 
 				proc.intoHeap({rank,suit,trump,username});
+
 				if(!proc.getDeck() && attacker.cards.length < 1){
-					store.dispatch({type:'SET_WINNER',winner:true,player:result});
+					store.dispatch({type:'SET_WINNER',winner:true,player:attacker});
 					attacker.winner = true;
+					return;
 				}
 
 				
@@ -334,7 +339,7 @@ const act = (e) => {
 		
 		store.dispatch({type:'PLAYER_ACT',data:dataToChange});
 		store.dispatch({type:'CARD_RENDER',activeCard:{rank,suit,trump,username}})
-		console.log('end of function')
+		
 		//restart timer
 		//store.dispatch(setTimer('RESTART_TIMER',30));
 		
@@ -363,7 +368,7 @@ const act = (e) => {
 		store.dispatch({type:'PLAYER_ACT',hold:{name:players.beat.name}});
 
 		let whoHold = undefined;
-		for(let player of store.getState().info.proc.players){
+		for(let player of info.proc.players){
 			if(player.name === players.beat.name)whoHold = player;
 		}
 		
@@ -385,8 +390,8 @@ const act = (e) => {
 			gameSet: gameSet,
 			currentStep:1
 		}
-
-
+		
+		store.dispatch({type:'CARD_RENDER', activeCard:''});
 		//store.dispatch(setPlayerAction({data:dataToChange})); //pick must makes itself
 		//store.dispatch(setTimer('RESTART-TIMER',30));	
 	}
@@ -429,8 +434,8 @@ const act = (e) => {
 			
 			if(result && result.winner){
 					
-				let url = window.document.location.href;
-				let id = url.slice( url.lastIndexOf('/')+1,url.length);
+				//let url = window && window.document.location.href;
+				//let id = url.slice( url.lastIndexOf('/')+1,url.length);
 				store.dispatch({type:'SET_WINNER',winner:true,player:result});
 				//store.dispatch(setWinner({winner:proc.player1,id:id}));
 				return;
@@ -454,23 +459,21 @@ const act = (e) => {
 				]);
 
 			store.dispatch({type:'PLAYER_ACT',hit:{name:whoHit},beat:{name:whoBeat}})
-			
+			proc.heap = [];
 			/*store.dispatch(setPlayerAction(
 				{hit:{name:whoHit},beat:{name:whoBeat},data:{history: mutatedHistory,gameSet:gameSet,currentStep:0}}
 				));*/
-			
-			//remove the active card from the table
-			store.dispatch({type:'CARD_RENDER', activeCard:''});
-
-			//and there is must be timer restart
-
-
 		}
+
+		//remove the active card from the table
+		store.dispatch({type:'CARD_RENDER', activeCard:''});
 		
 		
 	}
 
-	//auto functions
+	///////////////////////////////////////////////
+	////////////////////////AUTO ACTIONS 
+	
 	function makeAutoAttack(player,heap){
 
 		//console.log(player.name + " is hit");
@@ -785,7 +788,9 @@ describe('FINAL TEST',function(){
 
 		
 		//start of the game
-		while(count < 30){
+		while(!store.getState().info.win){
+			
+			count++;
 
 			let {hit,beat} = store.getState().players;
 
@@ -799,17 +804,21 @@ describe('FINAL TEST',function(){
 			
 
 			let card = makeAutoAttack(attacker,proc.heap);
-			console.log('attack card:'+card);
-			if(card){
 
+			//
+			if(card){
+				//console.log('attack card:'+card.rank+"/"+card.suit+'/'+card.username);
 				act(new Card(card));
 				let beatenCard = makeAutoDefence(defendant,card);
 				if(beatenCard){
+					//console.log('beat card is exist')
 					act(new Card(beatenCard));
+					continue;
 				}else{
 					
 					hold();
 					pick();
+					
 					continue;
 				}
 
@@ -817,17 +826,23 @@ describe('FINAL TEST',function(){
 				pick();
 			}
 
-			count++;
+			
 
 		}
 
 		let winner;
-		for(let player of proc.players)
-			if(player.winner)winner = player;
-		console.log('attacker:'+proc.attacker.cards.length);
-		console.log('defendant:'+proc.defendant.cards.length);
-		console.log('deck:'+proc.deck.length);
-		console.log('heap:'+proc.heap.length);
+		
+		for(let player of proc.players){
+			if(player.winner){
+				winner = player;
+				break;
+			}
+		}
+		//console.log('attacker:'+attacker.cards.length);
+		//console.log('defendant:'+defendant.cards.length);
+		//if(proc.deck)console.log('deck:'+proc.deck.length);
+		//console.log('heap:'+proc.heap.length);
+		//console.log(count)
 		expect(winner).to.be.an('object').that.a.deep.equal(store.getState().info.winner);
 
 	})

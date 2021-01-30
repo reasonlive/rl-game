@@ -1,19 +1,11 @@
 {
   "games": [
-    {
-      "finished": true,
-      "players": [
-        "hello",
-        "hello"
-      ],
-      "startDate": "2021-01-26T12:42:07.786Z",
-      "id": "2c5f21061c26e4bf70351723"
-    }
+    
   ],
   "users": [
     {
       "lastIpLog": {
-        "date": "2021-01-26T12:41:21.372Z",
+        "date": "2021-01-30T19:43:08.664Z",
         "ip": "::1"
       },
       "online": true,

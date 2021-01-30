@@ -73,7 +73,7 @@ const GamePage = (
 			data-rank={item.rank}
 			data-suit={item.suit}
 			data-trump={item.trump}
-			data-username={store.getState().info.proc.player2.name}
+			data-username={store.getState().info.proc.players[1].name}
 			onClick={(e)=>{
 				document.getElementsByClassName('player2')[0].style.display = 'none';
 				act(e);
@@ -84,8 +84,8 @@ const GamePage = (
 
 
 	let cssMsg = {position:'absolute',
-		top:-600,
-		left:400,
+		top:-350,
+		left:300,
 		background:'rgba(0,0,0,0.8)',
 		position:'relative',
 		zIndex:300,
@@ -151,9 +151,9 @@ const GamePage = (
 				}}>
 				{divs}
 			</div>
-			 <div className='msg' style={cssMsg}>You are now play ON SINGLE MODE, which means you may make steps for both players
-			and that is the way to test the application in UX details. To see the opponent's cards just click on the right button 
-			by the opponent's cards place <br/><br/> To start the game click on the timer on left side</div></div>) : ''}
+			 <div className='msg' style={cssMsg}>You are now playing IN A SINGLE MODE, which means you have to make steps for both players
+			and that is the way to test the application in UI details. To see the opponent's cards just click on the right button 
+			by the opponent's cards place <br/><br/> To start the game click on the timer on left-top side</div></div>) : ''}
 		</div>
 	)
 }

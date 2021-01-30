@@ -105,6 +105,7 @@ class Database{
 
 		file = obj = null;
 		return result;
+		console.log(result)
 	}
 
 	async  getAll(){

@@ -3,7 +3,7 @@ import {setPlayerAction,setTimer} from '../../../store/actions';
 
 	//player does not reflect the attack
 	//and takes away all the cards
-export const  hold = (e)=>{
+export const hold = ()=>{
 
 		let {cards,players,info} = store.getState();
 		let {gameSet,currentStep} = info;
@@ -11,17 +11,21 @@ export const  hold = (e)=>{
 		if(!players.beat)return;
 
 		//the check for online game through websocket
-		if(!localStorage.getItem('singleMode') &&  players.beat.name !== localStorage.getItem('name')){
+		/*if(!localStorage.getItem('singleMode') &&  players.beat.name !== localStorage.getItem('name')){
 			return;
-		}
+		}*/
 
 		let descr = {
 			name: players.beat.name
 		}
 
-		store.dispatch(setPlayerAction({hold:descr}));
+		//store.dispatch({type:'PLAYER_ACT',hold:{name:players.beat.name}});
+		store.dispatch(setPlayerAction({hold: {name:players.beat.name}}));
 
-		let whoHold = info.proc.player1.name === players.beat.name ? info.proc.player1 : info.proc.player2;
+		let whoHold = undefined;
+		for(let player of info.proc.players){
+			if(player.name === players.beat.name)whoHold = player;
+		}
 		
 		info.proc.takeHeap(whoHold);
 
@@ -34,17 +38,12 @@ export const  hold = (e)=>{
 
 		let dataToChange = {
 			history: mutatedHistory,
-			cards: {
-				...cards.cards,
-			},
-
+			activeCard: '',
 			gameSet: gameSet,
 			currentStep:1
 		}
-
-		store.dispatch(setPlayerAction({data:dataToChange})); //pick must makes itself
-		store.dispatch(setTimer('RESTART-TIMER',30));
-
-
 		
+		store.dispatch({type:'CARD_RENDER', activeCard:''});
+		//store.dispatch(setPlayerAction({data:dataToChange})); //pick may be invoked automatically
+		store.dispatch(setTimer('RESTART-TIMER',30));	
 }

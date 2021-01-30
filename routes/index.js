@@ -146,7 +146,7 @@ router.get('/game', async function(req,res,next){
 		if(!user)return next();
 		console.log('user '+user.name+' came into the game');
 		let game = await fetcher.get('game', req.query.id);
-		//console.log(game)
+		console.log(game)
 		if(!game)return next();
 
 		

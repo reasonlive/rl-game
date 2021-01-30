@@ -37,6 +37,7 @@ export const players = (state={},action={}) => {
 	}
 }
 
+
 export const cards = (state={},action={}) => {
 	switch(action.type){
 		case 'CARD_RENDER': return {
@@ -45,6 +46,10 @@ export const cards = (state={},action={}) => {
 			activeCard: action.activeCard,
 							
 		};
+		case 'HEAP_RENDER': return {
+			...state,
+			heap: action.heap || state.heap
+		}
 		default: return state;
 	}
 }
@@ -95,7 +100,8 @@ export const info = (state = {history:[]}, action = {}) => {
 
 		case 'SET_WINNER': return {
 			...state,
-			winner: action.winner,
+			win: action.winner,
+			winner: action.player,
 			gameId: action.gameId
 		}
 
