@@ -95,8 +95,9 @@ class GameProcess {
 	distribute(player,init){
 		if(init){
 			for(let i =0;i<6;i++){
-				this.player1.cards.push(this.deck.pop());
-				this.player2.cards.push(this.deck.pop());
+				for(let player of this.players){
+					player.cards.push(this.deck.pop())
+				}
 			}
 			return;
 		}else{
@@ -143,13 +144,17 @@ class GameProcess {
 	}
 
 	//put card into main heap
-	//when there are activeCards  
+	
 	intoHeap(card){
+		//this method is looking for the card which is a parameter
+		//takes the card from player hand
+		//and put it into heap
+
 		for(let player of this.players){
 			for(let i=0;i<player.cards.length;i++){
 				if(player.cards[i].rank === card.rank && player.cards[i].suit === card.suit){
 					let heapedCard = player.cards.splice(i,1);
-					this.heap.push(heapedCard[0]);
+					this.heap.push(card);
 					break;
 				}
 			}
@@ -157,13 +162,15 @@ class GameProcess {
 		
 	}
 
+	//method is working when defendant has done his job
+	//and attacker can't hit anymore
 	pickCards(){
 		
 		this.garbage = this.garbage.concat(this.heap);
 		
 		this.heap = [];
 		this.distribute(this.attacker);
-		console.log(this.attacker.cards.length)
+		//console.log(this.attacker.cards.length)
 		this.distribute(this.defendant);
 		let attacker = this.attacker;
 		this.attacker = this.defendant;
@@ -245,8 +252,8 @@ class GameProcess {
 
 
 	//checking rules and player steps
-	//hit card as attack card
-	//beaten card as defend card
+	//hit card as attacker card
+	//beaten card as defendant card
 	checkStep(hitCard, beatenCard){
 		
 		let hitValue = this.transCharIntoInt(hitCard.rank);

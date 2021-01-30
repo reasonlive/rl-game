@@ -46,7 +46,7 @@ function launchAutoTest(){
 		let whichCard = undefined;
 
 		for(let card of cards){
-			if(!heap){
+			if(heap.length < 1){
 				whichCard = card;
 				break;
 			}else{
@@ -115,7 +115,7 @@ function launchAutoTest(){
 	while(proc.attacker.cards.length > 0){
 		counter++;
 
-		let heap = proc.heap.length > 0 ? proc.heap : null;
+		let heap = proc.heap.length > 0 ? proc.heap : [];
 		let card = makeAutoAttack(proc.attacker,heap);
 		//if no suitable card on the hands
 		//attacker take cards from deck
@@ -144,8 +144,8 @@ function launchAutoTest(){
 		if(player.winner)console.log(player.name+" winner!");
 	}
 	console.log(counter);
-	console.log("amount of cards on hands "+proc.defendant.cards.length)
-	console.log("amount of cards on attacker hands "+proc.attacker.cards.length)
+	console.log("amount of cards in hands "+proc.defendant.cards.length)
+	console.log("amount of cards in attacker hands "+proc.attacker.cards.length)
 	console.log("amount of cards in the heap "+proc.heap.length)
 	
 	console.log('cards in the garbage heap: '+proc.garbage.length);
