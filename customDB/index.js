@@ -76,9 +76,9 @@ class Database{
 		//if collection is not exists
 		}else{
 			console.log(`collection ${this.coll} is empty`);
-			let created = await createCollection(this.coll);
+			let created = await this.createCollection(this.coll);
 			if(created){
-				return await add(object);
+				return await this.add(object);
 			}
 			
 		} 

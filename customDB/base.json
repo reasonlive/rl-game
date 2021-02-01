@@ -1,21 +1,17 @@
 {
-  "games": [
-    
-  ],
   "users": [
     {
-      "lastIpLog": {
-        "date": "2021-01-30T19:43:08.664Z",
-        "ip": "::1"
-      },
-      "online": true,
+      "id": "f3ee45784cbbcdfdd4ac4e7a"
+    },
+    {
+      "online": false,
       "losses": 0,
       "wins": 0,
-      "registered": "2021-01-17T19:19:35.602Z",
-      "password": "U2FsdGVkX18rB5n5wnjVwjFHVvUeGd5feT1QqcQUO0E=",
+      "registered": "2021-02-01T13:28:32.197Z",
+      "password": "U2FsdGVkX1+dtSdl1nXkwgIs3t9K7iAw/1R5NyG9CfY=",
       "email": "hello@mail.ru",
       "name": "hello",
-      "id": "4638ee54d20da7655dd1bac4"
+      "id": "27385745de0db1d11a24e50a"
     }
   ]
 }

@@ -7,12 +7,12 @@ const base = new Base('base', 'users');
 async function addUser(fields){
 	try{
 		let validatedFields = await schema.validate(fields);
-		let userid = await base.add(null,validatedFields);
+		let userid = await base.add(validatedFields);
 		return userid;
 	}catch(e){
 		let err = new Error(e.message);
 		err.name = e.name;
-		err.message = e.errors[0];
+		err.message = e.message;
 		return err;
 	}
 }
